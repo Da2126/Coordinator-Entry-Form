@@ -11,16 +11,12 @@
       padding: 20px;
       background-color: #343434;
       color: #eee;
-      margin: 0;
     }
-
     h2 {
       text-align: center;
       color: #fff;
       margin-bottom: 20px;
-      font-size: 28px;
     }
-
     form {
       background: #1e1e1e;
       border-radius: 12px;
@@ -32,13 +28,11 @@
       grid-template-columns: 1fr 1fr;
       gap: 20px 40px;
     }
-
     label {
       font-weight: bold;
       display: block;
       margin-top: 12px;
     }
-
     input, select {
       width: 100%;
       padding: 10px;
@@ -47,32 +41,25 @@
       border-radius: 8px;
       background: #2b2b2b;
       color: #fff;
-      font-size: 16px;
     }
-
     input[type="file"] {
-      padding: 12px;
-      font-size: 14px;
+      padding: 5px;
     }
-
     button {
       background-color: #45a049;
       color: white;
-      padding: 14px 20px;
+      padding: 12px 20px;
       border: none;
       border-radius: 8px;
       margin-top: 25px;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 16px;
       grid-column: 1 / span 2;
       width: 100%;
-      transition: background 0.3s ease;
     }
-
     button:hover {
       background-color: red;
     }
-
     .loading-overlay {
       position: fixed;
       top:0; left:0;
@@ -84,7 +71,6 @@
       z-index: 9999;
       display: none;
     }
-
     .loader {
       border: 8px solid #f3f3f3;
       border-top: 8px solid #4CAF50;
@@ -93,65 +79,25 @@
       height: 70px;
       animation: spin 1s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
     h3 {
       margin-top: 25px;
       border-bottom: 1px solid #444;
       padding-bottom: 5px;
       grid-column: 1 / span 2;
-      font-size: 20px;
-      cursor: pointer;
     }
-
-    /* Collapsible section */
-    .collapsible-content {
-      display: block;
-      transition: max-height 0.3s ease;
-      overflow: hidden;
-    }
-
-    /* MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
       form {
         grid-template-columns: 1fr;
-        padding: 20px;
-        gap: 15px;
       }
-
       button {
         grid-column: 1;
-        margin-top: 20px;
-        font-size: 18px;
-        padding: 14px;
       }
-
-      h2 {
-        font-size: 24px;
-      }
-
       h3 {
-        font-size: 18px;
-      }
-
-      label {
-        font-size: 14px;
-        margin-top: 10px;
-      }
-
-      input, select, button {
-        font-size: 16px;
-        padding: 12px;
-      }
-
-      .loading-overlay .loader {
-        width: 50px;
-        height: 50px;
-        border-width: 6px;
+        grid-column: 1;
       }
     }
   </style>
@@ -161,7 +107,6 @@
 <h2>Coordinator Entry Form</h2>
 
 <form id="samplerForm">
-
   <!-- LEFT COLUMN -->
   <div>
     <label>ID #</label>
@@ -256,21 +201,20 @@
     <input type="text" id="fileLink" readonly disabled>
   </div>
 
-  <!-- COLLAPSIBLE EXTRA UPLOADS -->
-  <h3 id="extraUploadsToggle">Optional Extra Uploads</h3>
-  <div class="collapsible-content" id="extraUploadsContent">
-    <label>Extra Photo 1</label>
-    <input type="file" id="extraPhoto1" accept="image/*">
+  <!-- FULL WIDTH -->
+  <h3>Optional Extra Uploads</h3>
 
-    <label>Extra Photo 2</label>
-    <input type="file" id="extraPhoto2" accept="image/*">
+  <label>Extra Photo 1</label>
+  <input type="file" id="extraPhoto1" accept="image/*">
 
-    <label>Extra Photo 3</label>
-    <input type="file" id="extraPhoto3" accept="image/*">
+  <label>Extra Photo 2</label>
+  <input type="file" id="extraPhoto2" accept="image/*">
 
-    <label>Optional Video</label>
-    <input type="file" id="extraVideo" accept="video/*">
-  </div>
+  <label>Extra Photo 3</label>
+  <input type="file" id="extraPhoto3" accept="image/*">
+
+  <label>Optional Video</label>
+  <input type="file" id="extraVideo" accept="video/*">
 
   <button type="submit">Submit</button>
 </form>
@@ -280,25 +224,28 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-  // Full name auto-update
   const lastNameField = document.getElementById("lastName");
   const givenNameField = document.getElementById("givenName");
   const fullNameField = document.getElementById("fullName");
+
   function updateFullName() {
     fullNameField.value = lastNameField.value.trim() + " " + givenNameField.value.trim();
   }
+
   lastNameField.addEventListener("input", updateFullName);
   givenNameField.addEventListener("input", updateFullName);
 
-  // Region population
   const regionMap = {
     LUZON: ["CL", "NCR", "NL", "SL", "STAG"],
     VISAYAS: ["CV", "EV", "WV"],
     MINDANAO: ["CAR", "NM", "SD", "SOC", "ZP"]
   };
+
   const groupAreaEl = document.getElementById("groupArea");
   const regionEl = document.getElementById("region");
+
   groupAreaEl.addEventListener("change", () => {
     const selectedGroup = groupAreaEl.value;
     const regions = regionMap[selectedGroup] || [];
@@ -311,14 +258,10 @@
     });
   });
 
-  // Collapsible extra uploads
-  const extraToggle = document.getElementById("extraUploadsToggle");
-  const extraContent = document.getElementById("extraUploadsContent");
-  extraToggle.addEventListener("click", () => {
-    extraContent.style.display = extraContent.style.display === "none" ? "block" : "none";
-  });
+  google.script.run.withSuccessHandler((id) => {
+    document.getElementById("idNumber").value = id;
+  }).getNextIdForForm();
 
-  // Form submission logic (same as your existing Google Apps Script code)
   async function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -333,21 +276,24 @@
     const loadingOverlay = document.getElementById("loadingOverlay");
     loadingOverlay.style.display = "flex";
 
-    // Required fields check
     const requiredFields = [
       "lastName","givenName","dateHired","middleName","groupArea","area","designation",
       "region","email","tin","address","contactNo","height","bdate","bplace",
       "motherMaiden","fatherMaiden","eFullName","eContactNo","relationship","facebookLink"
     ];
+
     for (const id of requiredFields) {
       if (!document.getElementById(id).value.trim()) {
         loadingOverlay.style.display = "none";
-        Swal.fire({ icon: "warning", title: "Missing Fields", text: `Please fill out the ${id} field.` });
+        Swal.fire({
+          icon: "warning",
+          title: "Missing Fields",
+          text: `Please fill out the ${id} field.`
+        });
         return;
       }
     }
 
-    // Collect form data
     const formData = {};
     const ids = [
       "idNumber","fullName","lastName","givenName","dateHired","middleName",
@@ -367,28 +313,40 @@
     const fileResults = await Promise.all(filePromises);
     fileResults.forEach(f => formData[f.name] = f.data);
 
-    // Call your Google Apps Script functions here
     google.script.run.withSuccessHandler((exists) => {
       if (exists) {
         loadingOverlay.style.display = "none";
-        Swal.fire({ icon: "error", title: "Duplicate Entry", text: "A coordinator with the same Last Name and Given Name already exists." });
+        Swal.fire({
+          icon: "error",
+          title: "Duplicate Entry",
+          text: "A coordinator with the same Last Name and Given Name already exists."
+        });
       } else {
         google.script.run
           .withSuccessHandler((id) => {
             loadingOverlay.style.display = "none";
-            Swal.fire({ icon: 'success', title: 'Form Submitted!', html: `✅ ID <b>${id}</b> has been successfully added.`, timer: 3000, showConfirmButton: true });
+            Swal.fire({
+              icon: 'success',
+              title: 'Form Submitted!',
+              html: `✅ ID <b>${id}</b> has been successfully added.`,
+              timer: 3000,
+              showConfirmButton: true
+            });
             document.getElementById("samplerForm").reset();
             document.getElementById("fullName").value = "";
           })
           .withFailureHandler((err) => {
             loadingOverlay.style.display = "none";
-            Swal.fire({ icon: 'error', title: 'Submission Failed!', text: err.message });
+            Swal.fire({
+              icon: 'error',
+              title: 'Submission Failed!',
+              text: err.message
+            });
           })
           .submitForm(formData);
       }
     }).checkDuplicate(formData.lastName, formData.givenName);
   });
-
 </script>
 </body>
 </html>
